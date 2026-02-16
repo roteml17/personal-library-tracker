@@ -82,6 +82,3 @@ This architecture ensures that:
 - The wish list page always displays the current state
 - No need to pass props through multiple component layers
 - State changes are immediately reflected across all components
-
-
-The production-ready files will be in the `dist/` folder.
