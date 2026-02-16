@@ -12,12 +12,12 @@ export const useWishList = () => {
 
 export const WishListProvider = ({ children }) => {
   const [wishList, setWishList] = useState(() => {
-    // טעינה מ-localStorage בעת אתחול
+    // Load from localStorage on initialization
     const saved = localStorage.getItem('wishList');
     return saved ? JSON.parse(saved) : [];
   });
 
-  // שמירה ב-localStorage בכל שינוי
+  // Save to localStorage on every change
   useEffect(() => {
     localStorage.setItem('wishList', JSON.stringify(wishList));
   }, [wishList]);

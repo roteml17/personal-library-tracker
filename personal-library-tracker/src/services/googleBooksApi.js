@@ -25,7 +25,7 @@ export const searchBooks = async (searchTerm, signal) => {
   }
 };
 
-// פונקציה לקבלת פרטים מלאים של ספר לפי ID
+// Function to get full book details by ID
 export const getBookDetails = async (bookId, signal) => {
   try {
     const response = await fetch(`${API_BASE_URL}/${bookId}`, { signal });

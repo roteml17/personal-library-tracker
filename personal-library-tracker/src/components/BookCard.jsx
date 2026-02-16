@@ -4,7 +4,6 @@ const BookCard = ({ book, showRemoveButton = false, onBookClick }) => {
   const { addToWishList, removeFromWishList, isInWishList } = useWishList();
 
   const bookInfo = book.volumeInfo;
-  // משתמשים בתמונה גדולה יותר לאיכות טובה יותר - medium או large
   const thumbnail = bookInfo.imageLinks?.large ||
     bookInfo.imageLinks?.medium ||
     bookInfo.imageLinks?.small ||
@@ -34,7 +33,7 @@ const BookCard = ({ book, showRemoveButton = false, onBookClick }) => {
           className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
           loading="lazy"
         />
-        {/* כפתור Add/Remove עגול בפינה הימנית למטה */}
+        {/* Add/Remove button in bottom right corner */}
         {showRemoveButton ? (
           <button
             onClick={(e) => {

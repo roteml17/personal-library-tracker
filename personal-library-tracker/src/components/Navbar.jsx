@@ -6,7 +6,6 @@ const Navbar = () => {
       <div className="max-w-5xl mx-auto px-6">
         <div className="flex flex-col items-center py-4">
 
-          {/* Logo - גדול וממורכז */}
           <Link to="/" className="mb-4">
             <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900">
               Library

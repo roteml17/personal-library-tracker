@@ -9,7 +9,7 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
 
     useEffect(() => {
         if (isOpen && book?.id) {
-            // טוען פרטים מלאים מה-API
+            // Load full details from API
             setIsLoadingDetails(true);
             getBookDetails(book.id)
                 .then((data) => {
@@ -17,7 +17,7 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
                 })
                 .catch((error) => {
                     console.error('Error loading book details:', error);
-                    // אם יש שגיאה, משתמש בנתונים הקיימים
+                    // If error, use existing data
                     setFullBookData(book);
                 })
                 .finally(() => {
@@ -28,7 +28,7 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
 
     if (!isOpen || !book) return null;
 
-    // משתמש בנתונים המלאים אם יש, אחרת בנתונים הקיימים
+    // Use full data if available, otherwise use existing data
     const bookData = fullBookData || book;
     const bookInfo = bookData.volumeInfo;
 
@@ -40,16 +40,16 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
     const title = bookInfo.title || 'Unknown Title';
     const authors = bookInfo.authors?.join(', ') || 'Unknown Author';
 
-    // ניקוי HTML מ-description אם יש
+    // Clean HTML from description if present
     const cleanDescription = (text) => {
         if (!text) return 'No description available.';
-        // הסרת תגי HTML בסיסית
+        // Basic HTML tag removal
         if (typeof window !== 'undefined') {
             const div = document.createElement('div');
             div.innerHTML = text;
             return div.textContent || div.innerText || 'No description available.';
         }
-        // אם אין window (SSR), מסיר תגים ידנית
+        // If no window (SSR), remove tags manually
         return text.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim() || 'No description available.';
     };
 
