@@ -1,6 +1,6 @@
 import { useWishList } from '../context/WishListContext';
 
-const BookCard = ({ book, showRemoveButton = false }) => {
+const BookCard = ({ book, showRemoveButton = false, onBookClick }) => {
   const { addToWishList, removeFromWishList, isInWishList } = useWishList();
 
   const bookInfo = book.volumeInfo;
@@ -23,7 +23,10 @@ const BookCard = ({ book, showRemoveButton = false }) => {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md relative">
+    <div
+      className="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md relative cursor-pointer"
+      onClick={() => onBookClick && onBookClick(book)}
+    >
       <div className="aspect-square overflow-hidden bg-gray-50 rounded-t-2xl relative">
         <img
           src={thumbnail}
@@ -34,8 +37,11 @@ const BookCard = ({ book, showRemoveButton = false }) => {
         {/* כפתור Add/Remove עגול בפינה הימנית למטה */}
         {showRemoveButton ? (
           <button
-            onClick={handleRemoveFromWishList}
-            className="absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm bg-white text-red-500 hover:bg-red-50 active:scale-[0.95]"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveFromWishList();
+            }}
+            className="absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm bg-white text-red-500 hover:bg-red-50 active:scale-[0.95] z-10"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -43,9 +49,12 @@ const BookCard = ({ book, showRemoveButton = false }) => {
           </button>
         ) : (
           <button
-            onClick={handleAddToWishList}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToWishList();
+            }}
             disabled={inWishList}
-            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm ${inWishList
+            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-sm z-10 ${inWishList
               ? 'bg-red-100 text-red-500 cursor-not-allowed'
               : 'bg-white text-gray-400 hover:text-red-500 hover:bg-red-50 active:scale-[0.95]'
               }`}

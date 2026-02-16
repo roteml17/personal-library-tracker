@@ -1,8 +1,22 @@
+import { useState } from 'react';
 import { useWishList } from '../context/WishListContext';
 import BookCard from '../components/BookCard';
+import BookDetailModal from '../components/BookDetailModal';
 
 const WishListPage = () => {
   const { wishList } = useWishList();
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleBookClick = (book) => {
+    setSelectedBook(book);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBook(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -39,12 +53,24 @@ const WishListPage = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {wishList.map((book) => (
-              <BookCard key={book.id} book={book} showRemoveButton={true} />
+              <BookCard
+                key={book.id}
+                book={book}
+                showRemoveButton={true}
+                onBookClick={handleBookClick}
+              />
             ))}
           </div>
         )}
       </div>
-    </div >
+
+      {/* Book Detail Modal */}
+      <BookDetailModal
+        book={selectedBook}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
+    </div>
   );
 };
 
