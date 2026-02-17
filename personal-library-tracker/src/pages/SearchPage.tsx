@@ -4,13 +4,14 @@ import BookCard from '../components/BookCard';
 import BookDetailModal from '../components/BookDetailModal';
 import { searchBooks } from '../services/googleBooksApi';
 import { useDebounce } from '../utils/useDebounce';
+import type { Book } from '../types';
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -36,10 +37,23 @@ const SearchPage = () => {
         setBooks(results);
       } catch (err) {
         // ignore aborted requests (user typed again / navigated away)
-        if (err?.name === 'AbortError') return;
+        if (err instanceof Error && err?.name === 'AbortError') return;
 
-        setError('Failed to fetch books. Please try again.');
-        console.error(err);
+        // Provide user-friendly error messages
+        let errorMessage = 'Failed to fetch books. Please try again.';
+        if (err instanceof Error) {
+          if (err.message.includes('Daily quota exceeded') || err.message.includes('quota exceeded')) {
+            errorMessage = 'Daily API quota exceeded. Please try again tomorrow.';
+          } else if (err.message.includes('429') || err.message.includes('Too many requests')) {
+            errorMessage = 'Too many requests. Please wait a moment before searching again.';
+          } else if (err.message.includes('Failed to fetch')) {
+            errorMessage = 'Network error. Please check your connection and try again.';
+          } else {
+            errorMessage = err.message;
+          }
+        }
+        setError(errorMessage);
+        console.error('Search error:', err);
       } finally {
         // If the request was aborted, avoid toggling loading back (optional but clean)
         if (!controller.signal.aborted) {
@@ -55,7 +69,7 @@ const SearchPage = () => {
     };
   }, [debouncedSearchTerm]);
 
-  const handleBookClick = (book) => {
+  const handleBookClick = (book: Book) => {
     setSelectedBook(book);
     setIsModalOpen(true);
   };
@@ -118,3 +132,4 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+

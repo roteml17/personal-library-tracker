@@ -1,8 +1,16 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { Book } from '../types';
 
-const WishListContext = createContext();
+interface WishListContextType {
+  wishList: Book[];
+  addToWishList: (book: Book) => void;
+  removeFromWishList: (bookId: string) => void;
+  isInWishList: (bookId: string) => boolean;
+}
 
-export const useWishList = () => {
+const WishListContext = createContext<WishListContextType | undefined>(undefined);
+
+export const useWishList = (): WishListContextType => {
   const context = useContext(WishListContext);
   if (!context) {
     throw new Error('useWishList must be used within WishListProvider');
@@ -10,8 +18,12 @@ export const useWishList = () => {
   return context;
 };
 
-export const WishListProvider = ({ children }) => {
-  const [wishList, setWishList] = useState(() => {
+interface WishListProviderProps {
+  children: ReactNode;
+}
+
+export const WishListProvider = ({ children }: WishListProviderProps) => {
+  const [wishList, setWishList] = useState<Book[]>(() => {
     // Load from localStorage on initialization
     const saved = localStorage.getItem('wishList');
     return saved ? JSON.parse(saved) : [];
@@ -22,15 +34,15 @@ export const WishListProvider = ({ children }) => {
     localStorage.setItem('wishList', JSON.stringify(wishList));
   }, [wishList]);
 
-  const addToWishList = (book) => {
+  const addToWishList = (book: Book) => {
     setWishList((prev) => [...prev, book]);
   };
 
-  const removeFromWishList = (bookId) => {
+  const removeFromWishList = (bookId: string) => {
     setWishList((prev) => prev.filter((book) => book.id !== bookId));
   };
 
-  const isInWishList = (bookId) => {
+  const isInWishList = (bookId: string): boolean => {
     return wishList.some((book) => book.id === bookId);
   };
 
@@ -47,3 +59,4 @@ export const WishListProvider = ({ children }) => {
     </WishListContext.Provider>
   );
 };
+

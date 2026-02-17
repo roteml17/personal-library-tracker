@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useWishList } from '../context/WishListContext';
 import BookCard from '../components/BookCard';
 import BookDetailModal from '../components/BookDetailModal';
+import type { Book } from '../types';
 
 const WishListPage = () => {
   const { wishList } = useWishList();
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleBookClick = (book) => {
+  const handleBookClick = (book: Book) => {
     setSelectedBook(book);
     setIsModalOpen(true);
   };
@@ -75,3 +76,4 @@ const WishListPage = () => {
 };
 
 export default WishListPage;
+

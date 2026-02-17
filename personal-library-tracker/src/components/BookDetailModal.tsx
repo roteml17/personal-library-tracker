@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useWishList } from '../context/WishListContext';
 import { getBookDetails } from '../services/googleBooksApi';
+import type { Book } from '../types';
 
-const BookDetailModal = ({ book, isOpen, onClose }) => {
+interface BookDetailModalProps {
+  book: Book | null;
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const BookDetailModal = ({ book, isOpen, onClose }: BookDetailModalProps) => {
     const { addToWishList, removeFromWishList, isInWishList } = useWishList();
-    const [fullBookData, setFullBookData] = useState(null);
+    const [fullBookData, setFullBookData] = useState<Book | null>(null);
     const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
     useEffect(() => {
@@ -41,7 +48,7 @@ const BookDetailModal = ({ book, isOpen, onClose }) => {
     const authors = bookInfo.authors?.join(', ') || 'Unknown Author';
 
     // Clean HTML from description if present
-    const cleanDescription = (text) => {
+    const cleanDescription = (text: string | undefined): string => {
         if (!text) return 'No description available.';
         // Basic HTML tag removal
         if (typeof window !== 'undefined') {

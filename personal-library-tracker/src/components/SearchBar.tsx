@@ -1,4 +1,10 @@
-const SearchBar = ({ searchTerm, onSearchChange, isLoading }) => {
+interface SearchBarProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  isLoading?: boolean;
+}
+
+const SearchBar = ({ searchTerm, onSearchChange, isLoading }: SearchBarProps) => {
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div className="relative">
@@ -24,3 +30,4 @@ const SearchBar = ({ searchTerm, onSearchChange, isLoading }) => {
 };
 
 export default SearchBar;
+

@@ -1,6 +1,13 @@
 import { useWishList } from '../context/WishListContext';
+import type { Book } from '../types';
 
-const BookCard = ({ book, showRemoveButton = false, onBookClick }) => {
+interface BookCardProps {
+  book: Book;
+  showRemoveButton?: boolean;
+  onBookClick?: (book: Book) => void;
+}
+
+const BookCard = ({ book, showRemoveButton = false, onBookClick }: BookCardProps) => {
   const { addToWishList, removeFromWishList, isInWishList } = useWishList();
 
   const bookInfo = book.volumeInfo;
@@ -85,3 +92,4 @@ const BookCard = ({ book, showRemoveButton = false, onBookClick }) => {
 };
 
 export default BookCard;
+
